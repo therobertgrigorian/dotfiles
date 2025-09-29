@@ -1,0 +1,10 @@
+theme = Catppuccin Mocha
+font-family = Fira Code 
+font-size = 14
+mouse-hide-while-typing = true
+gtk-titlebar = false
+window-decoration = true
+macos-titlebar-style = hidden
+window-padding-y = 10,6
+window-padding-x = 10,6
+macos-option-as-alt = true
