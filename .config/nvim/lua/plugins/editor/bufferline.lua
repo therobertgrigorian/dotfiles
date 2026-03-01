@@ -18,13 +18,14 @@ return {
   },
   config = function()
     require("bufferline").setup({
-      highlights = require("catppuccin.groups.integrations.bufferline").get({
-        styles = { "italic", "bold" },
+      options = {
+        themable = true,  -- allows catppuccin to style bufferline
+      },
+      highlights = {
         fill = {
           bg = "#1e1e2e",
-          fg = "#1e1e2e",
         }
-      }),
+      },
     })
 
     -- Fix bufferline when restoring a session
