@@ -1,9 +1,13 @@
+# Claude
 .claude/debug/
 .claude/backups/
 .claude/cache/
 .claude/chrome/
 .claude/tasks/
 .claude/
+
+# Cursor 
+.cursor/hooks/state/
 
 # Runtime / cache / machine-specific
 .volta/
