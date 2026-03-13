@@ -2,9 +2,9 @@
   "mcp": {
     "pencil": {
       "command": [
-        "/Users/robertgrigorian/.cursor/extensions/highagency.pencildev-0.6.28-universal/out/mcp-server-darwin-arm64",
+        "/Applications/Pencil.app/Contents/Resources/app.asar.unpacked/out/mcp-server-darwin-arm64",
         "--app",
-        "cursor"
+        "desktop"
       ],
       "enabled": true,
       "type": "local"

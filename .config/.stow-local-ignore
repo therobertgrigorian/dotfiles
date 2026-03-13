@@ -1,0 +1,8 @@
+# Runtime / cache / machine-specific - do not stow
+nvm
+^\.android
+configstore
+cagent
+^cursor/chats
+^cursor/statsig-cache\.json
+^atuin/atuin-receipt\.json

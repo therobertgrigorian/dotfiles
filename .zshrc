@@ -37,10 +37,15 @@ bindkey jj vi-cmd-mode
 export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow'
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-. "$HOME/.atuin/bin/env"
-eval "$(atuin init zsh)"
+# Atuin - shell history (install via: brew install atuin)
+if command -v atuin &>/dev/null; then
+  eval "$(atuin init zsh)"
+elif [[ -f "$HOME/.atuin/bin/env" ]]; then
+  . "$HOME/.atuin/bin/env"
+  eval "$(atuin init zsh)"
+fi
 
-export VOLTA_HOME=$HOME/.volta
+export VOLTA_HOME="$HOME/.volta"
 
 export XDG_CONFIG_HOME="/Users/robertgrigorian/.config"
 
@@ -61,13 +66,15 @@ export ANDROID_HOME=$HOME/Library/Android/sdk
 
 # PATH setup
 export PATH=/opt/homebrew/bin:$PATH
+export PATH="$PATH:/opt/homebrew/opt/openjdk@17/bin"
+export PATH="$PATH:$HOME/.local/bin"
+export PATH="$PATH:$BUN_INSTALL/bin"
 export PATH="$PATH:$VOLTA_HOME/bin"
 export PATH="$PATH:$HOME/.rvm/bin"
-export PATH="$PATH:$BUN_INSTALL/bin"
 export PATH=$PATH:$ANDROID_HOME/emulator
 export PATH=$PATH:$ANDROID_HOME/platform-tools
 export PATH=$PATH:$ANDROID_HOME/tools/bin
-export PATH="$PATH:/opt/homebrew/opt/openjdk@17/bin"
+export PATH="$PATH:$HOME/.antigravity/antigravity/bin"
 
 ### Added by Zinit's installer
 if [[ ! -f $HOME/.local/share/zinit/zinit.git/zinit.zsh ]]; then
@@ -94,7 +101,3 @@ zinit light-mode for \
 
 zinit light Aloxaf/fzf-tab
 
-export PATH="$HOME/.local/bin:$PATH"
-
-# Added by Antigravity
-export PATH="/Users/robertgrigorian/.antigravity/antigravity/bin:$PATH"

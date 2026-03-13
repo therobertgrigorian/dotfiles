@@ -3,3 +3,15 @@
 .claude/cache/
 .claude/chrome/
 .claude/tasks/
+.claude/
+
+# Runtime / cache / machine-specific
+.volta/
+.config/nvm/
+.config/.android/
+.config/cursor/chats/
+.config/cursor/statsig-cache.json
+.config/configstore/
+.config/cagent/
+.config/atuin/atuin-receipt.json
+.atuin/bin/
