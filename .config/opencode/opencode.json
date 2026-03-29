@@ -10,5 +10,20 @@
       "enabled": true,
       "type": "local"
     }
+  },
+  "provider": {
+    "ollama": {
+      "models": {
+        "qwen3.5": {
+          "_launch": true,
+          "name": "qwen3.5"
+        }
+      },
+      "name": "Ollama",
+      "npm": "@ai-sdk/openai-compatible",
+      "options": {
+        "baseURL": "http://127.0.0.1:11434/v1"
+      }
+    }
   }
 }
