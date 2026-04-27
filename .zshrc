@@ -1,10 +1,15 @@
 setopt prompt_subst
 autoload bashcompinit && bashcompinit
 autoload -Uz compinit
-compinit
+# Only regenerate compdump once per day
+if [[ -n ~/.zcompdump(#qN.mh+24) ]]; then
+  compinit
+else
+  compinit -C
+fi
 complete -C '/usr/local/bin/aws_completer' aws
 
-source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 bindkey '^w' autosuggest-execute
 bindkey '^e' autosuggest-accept
@@ -100,4 +105,9 @@ zinit light-mode for \
 ### End of Zinit's installer chunk
 
 zinit light Aloxaf/fzf-tab
+
+# Zoxide - smarter cd (must be last per _ZO_DOCTOR)
+if [[ -o interactive ]]; then
+  eval "$(zoxide init zsh --cmd cd)"
+fi
 

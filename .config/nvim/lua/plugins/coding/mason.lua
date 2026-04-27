@@ -16,6 +16,7 @@ return {
           "html",
           "cssls",
           "jsonls",
+          "yamlls",
         },
       })
     end,
@@ -50,6 +51,7 @@ return {
         html = {},
         cssls = {},
         jsonls = {},
+        yamlls = {},
         lua_ls = {
           settings = {
             Lua = {
