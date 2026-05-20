@@ -19,3 +19,5 @@
 .config/cagent/
 .config/atuin/atuin-receipt.json
 .atuin/bin/
+.config/raycast/
+.config/raycast-x/
