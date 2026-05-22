@@ -106,16 +106,6 @@ zinit light-mode for \
 
 zinit light Aloxaf/fzf-tab
 
-# pi (pi.dev) wrapper — inject API keys from 1Password if available.
-# Falls back to plain `pi` if op CLI or env file is missing.
-pi() {
-	if [ -z "${PI_NO_OP_RUN:-}" ] && command -v op >/dev/null 2>&1 && [ -f "$HOME/.config/op/pi.env" ]; then
-		op run --no-masking --env-file="$HOME/.config/op/pi.env" -- command pi "$@"
-	else
-		command pi "$@"
-	fi
-}
-
 # Zoxide - smarter cd (must be last per _ZO_DOCTOR)
 if [[ -o interactive ]]; then
   eval "$(zoxide init zsh --cmd cd)"
