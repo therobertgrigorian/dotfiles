@@ -2,3 +2,5 @@
 ^\.git
 ^\.gitignore
 ^\AGENTS.md
+^templates
+^bootstrap\.sh
