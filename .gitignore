@@ -9,6 +9,15 @@
 # Cursor 
 .cursor/hooks/state/
 
+# Pi (pi.dev) — secrets and per-machine state
+.pi/agent/auth.json
+.pi/agent/sessions/
+.pi/agent/settings.json
+
+# 1Password CLI — daemon socket and per-machine config
+.config/op/op-daemon.sock
+.config/op/config
+
 # Runtime / cache / machine-specific
 .volta/
 .config/nvm/
