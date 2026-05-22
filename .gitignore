@@ -18,6 +18,9 @@
 .config/op/op-daemon.sock
 .config/op/config
 
+# SwiftPM — Xcode-managed symlinks into ~/Library/Caches, never dotfiles
+.config/swiftpm/
+
 # Runtime / cache / machine-specific
 .volta/
 .config/nvm/
