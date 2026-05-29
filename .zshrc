@@ -111,3 +111,5 @@ if [[ -o interactive ]]; then
   eval "$(zoxide init zsh --cmd cd)"
 fi
 
+# Load direnv
+eval "$(direnv hook bash)"

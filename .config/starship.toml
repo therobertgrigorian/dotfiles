@@ -26,6 +26,8 @@ $time\
 [ ](fg:purple)\
 $line_break$character"""
 
+right_format = """${custom.devbox}"""
+
 palette = 'catppuccin_mocha'
 
 [palettes.gruvbox_dark]
@@ -188,3 +190,11 @@ vimcmd_symbol = '[](bold fg:creen)'
 vimcmd_replace_one_symbol = '[](bold fg:purple)'
 vimcmd_replace_symbol = '[](bold fg:purple)'
 vimcmd_visual_symbol = '[](bold fg:lavender)'
+
+[custom.devbox]
+description = "Show devbox shell indicator"
+when = '''test -n "$DEVBOX_SHELL_ENABLED"'''
+command = "echo devbox"
+shell = ["sh", "--noprofile", "--norc"]
+symbol = "󱄅"
+format = '[](fg:yellow)[$symbol $output](fg:mantle bg:yellow)[](fg:yellow)'
