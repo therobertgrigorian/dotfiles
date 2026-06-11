@@ -24,7 +24,7 @@ return {
   {
     "neovim/nvim-lspconfig",
     event = { "BufReadPre", "BufNewFile" },
-    dependencies = { "hrsh7th/cmp-nvim-lsp" },
+    dependencies = { "hrsh7th/cmp-nvim-lsp", "williamboman/mason-lspconfig.nvim" },
     config = function()
       local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
@@ -47,12 +47,23 @@ return {
 
       -- Configure servers using vim.lsp.config (Neovim 0.11+)
       local servers = {
-        ts_ls = {},
-        html = {},
-        cssls = {},
-        jsonls = {},
-        yamlls = {},
+        ts_ls = {
+          capabilities = capabilities,
+        },
+        html = {
+          capabilities = capabilities,
+        },
+        cssls = {
+          capabilities = capabilities,
+        },
+        jsonls = {
+          capabilities = capabilities,
+        },
+        yamlls = {
+          capabilities = capabilities,
+        },
         lua_ls = {
+          capabilities = capabilities,
           settings = {
             Lua = {
               diagnostics = {
@@ -68,7 +79,6 @@ return {
       }
 
       for server, config in pairs(servers) do
-        config.capabilities = capabilities
         vim.lsp.config(server, config)
         vim.lsp.enable(server)
       end
