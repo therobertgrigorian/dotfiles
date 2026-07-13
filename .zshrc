@@ -113,3 +113,9 @@ fi
 
 # Load direnv
 eval "$(direnv hook bash)"
+
+# Google Cloud SDK (brew cask gcloud-cli): binaries are on PATH via brew;
+# only shell completion needs sourcing.
+if [ -f "${HOMEBREW_PREFIX:-/opt/homebrew}/share/google-cloud-sdk/completion.zsh.inc" ]; then
+  . "${HOMEBREW_PREFIX:-/opt/homebrew}/share/google-cloud-sdk/completion.zsh.inc"
+fi
