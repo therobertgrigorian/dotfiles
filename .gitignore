@@ -33,3 +33,9 @@
 .atuin/bin/
 .config/raycast/
 .config/raycast-x/
+
+# Google Cloud SDK state — OAuth tokens, credentials, virtualenv, logs
+.config/gcloud/
+
+# Homebrew trust store — per-machine state
+.config/homebrew/
