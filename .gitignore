@@ -39,3 +39,9 @@
 
 # Homebrew trust store — per-machine state
 .config/homebrew/
+
+# 1Password app — per-machine telemetry/state
+.config/1Password/
+
+# macOS junk
+.DS_Store
