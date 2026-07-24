@@ -82,12 +82,6 @@ keybindings:
       name: lazygit
       command: >
         cd {{.RepoPath}}; lazygit
-  prs:
-    - key: C
-      name: code review
-      command: >
-        tmux new-window -n "PR-{{.PrNumber}}" 
-        'wt switch pr:{{.PrNumber}} -x "opencode --prompt `@code-reviewer: review-pr-for-this-branch`"'
 
 theme:
   colors:

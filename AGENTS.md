@@ -37,7 +37,6 @@ stow -R .
     git/ignore              # Global gitignore
     htop/htoprc             # htop process monitor
     nvim/                   # Neovim configuration (Lua)
-    opencode/               # OpenCode AI tool config
     raycast/                # Raycast launcher extensions
     starship.toml           # Starship prompt
     tmux/tmux.conf          # Tmux + plugins (TPM)
