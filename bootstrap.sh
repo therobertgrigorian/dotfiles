@@ -27,7 +27,10 @@ fi
 # 2. Brewfile — formulae, casks, taps, App Store apps
 # ---------------------------------------------------------------------------
 log "brew bundle (Brewfile)"
-brew bundle --file="$DOTFILES/Brewfile"
+# Non-fatal: a single failed formula/cask/extension must not abort the whole
+# script (set -e), or later steps — crucially `stow` — would never run.
+brew bundle --file="$DOTFILES/Brewfile" \
+	|| warn "brew bundle reported failures — continuing (rerun 'brew bundle' later)"
 
 # ---------------------------------------------------------------------------
 # 3. Pre-create dirs stow must NOT fold into a single symlink.
