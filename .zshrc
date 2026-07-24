@@ -1,3 +1,7 @@
+# XDG base dir — set FIRST: atuin (and others) read it during init below, and a
+# stale value can be inherited from a parent process (e.g. an old tmux server).
+export XDG_CONFIG_HOME="$HOME/.config"
+
 setopt prompt_subst
 autoload bashcompinit && bashcompinit
 autoload -Uz compinit
@@ -49,8 +53,6 @@ elif [[ -f "$HOME/.atuin/bin/env" ]]; then
   . "$HOME/.atuin/bin/env"
   eval "$(atuin init zsh)"
 fi
-
-export XDG_CONFIG_HOME="$HOME/.config"
 
 function y() {
 	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd

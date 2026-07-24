@@ -147,7 +147,9 @@ return {
 4. **macOS only.** All paths assume macOS with Homebrew at `/opt/homebrew`. Do not
    add Linux-specific paths or package manager commands.
 
-5. **XDG_CONFIG_HOME** is explicitly set to `/Users/robertgrigorian/.config` in `.zshrc`.
+5. **XDG_CONFIG_HOME** is set to `$HOME/.config` at the very top of `.zshrc` —
+   before atuin and other tool init, so a stale value inherited from a parent
+   process (e.g. an old tmux server) can't break them.
 
 6. **Git style:** Informal commit messages. No conventional commits enforced. No
    pre-commit hooks. Remote is GitHub under user `therobertgrigorian`.
