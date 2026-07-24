@@ -31,6 +31,8 @@
 .config/cagent/
 .config/atuin/atuin-receipt.json
 .atuin/bin/
+# tmux plugins are installed & managed by TPM (XDG default path), not committed
+.config/tmux/plugins/
 .config/raycast/
 .config/raycast-x/
 

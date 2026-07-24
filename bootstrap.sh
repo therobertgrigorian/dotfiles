@@ -50,15 +50,25 @@ log "stow ."
 stow .
 
 # ---------------------------------------------------------------------------
-# 5. TPM — tmux plugin manager
-#    Plugins themselves are installed inside tmux with: prefix + I
+# 5. TPM — tmux plugin manager + the plugins declared in tmux.conf.
+#    Config lives at ~/.config/tmux, so TPM's XDG default puts plugins in
+#    ~/.config/tmux/plugins/ — tpm must live there too (matches tmux.conf).
 # ---------------------------------------------------------------------------
-TPM_DIR="$HOME/.tmux/plugins/tpm"
+TPM_DIR="$HOME/.config/tmux/plugins/tpm"
 if [ ! -d "$TPM_DIR" ]; then
 	log "installing TPM"
 	git clone --depth=1 https://github.com/tmux-plugins/tpm "$TPM_DIR"
 else
 	log "TPM already installed"
+fi
+# Install/refresh the declared plugins headlessly (equivalent to prefix + I).
+# A throwaway session is used so a running tmux server's sessions are untouched.
+if command -v tmux >/dev/null 2>&1; then
+	log "installing tmux plugins"
+	tmux start-server 2>/dev/null
+	tmux new-session -d -s __tpm_bootstrap 2>/dev/null
+	"$TPM_DIR/bin/install_plugins" >/dev/null 2>&1 || warn "tmux plugin install had issues"
+	tmux kill-session -t __tpm_bootstrap 2>/dev/null
 fi
 
 # ---------------------------------------------------------------------------
