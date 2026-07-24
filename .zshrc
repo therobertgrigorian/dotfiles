@@ -50,9 +50,7 @@ elif [[ -f "$HOME/.atuin/bin/env" ]]; then
   eval "$(atuin init zsh)"
 fi
 
-export VOLTA_HOME="$HOME/.volta"
-
-export XDG_CONFIG_HOME="/Users/robertgrigorian/.config"
+export XDG_CONFIG_HOME="$HOME/.config"
 
 function y() {
 	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
@@ -63,19 +61,22 @@ function y() {
 	rm -f -- "$tmp"
 }
 
-[ -s "/Users/robertgrigorian/.bun/_bun" ] && source "/Users/robertgrigorian/.bun/_bun"
-
 export BUN_INSTALL="$HOME/.bun"
 
 export ANDROID_HOME=$HOME/Library/Android/sdk
 
 # PATH setup
 export PATH=/opt/homebrew/bin:$PATH
-export PATH="$PATH:/opt/homebrew/opt/openjdk@17/bin"
+# LTS language runtimes from Homebrew. node@24, ruby, python@3.13 and
+# openjdk@21 are keg-only / not the default `python3`, so prepend their bins.
+# Per-project versions are handled by devbox.
+export PATH="/opt/homebrew/opt/node@24/bin:$PATH"
+export PATH="/opt/homebrew/opt/ruby/bin:$PATH"
+export PATH="/opt/homebrew/opt/python@3.13/libexec/bin:$PATH"
+export JAVA_HOME="/opt/homebrew/opt/openjdk@21"
+export PATH="$JAVA_HOME/bin:$PATH"
 export PATH="$PATH:$HOME/.local/bin"
 export PATH="$PATH:$BUN_INSTALL/bin"
-export PATH="$PATH:$VOLTA_HOME/bin"
-export PATH="$PATH:$HOME/.rvm/bin"
 export PATH=$PATH:$ANDROID_HOME/emulator
 export PATH=$PATH:$ANDROID_HOME/platform-tools
 export PATH=$PATH:$ANDROID_HOME/tools/bin
@@ -112,7 +113,9 @@ if [[ -o interactive ]]; then
 fi
 
 # Load direnv
-eval "$(direnv hook bash)"
+if command -v direnv >/dev/null 2>&1; then
+  eval "$(direnv hook zsh)"
+fi
 
 # Google Cloud SDK (brew cask gcloud-cli): binaries are on PATH via brew;
 # only shell completion needs sourcing.

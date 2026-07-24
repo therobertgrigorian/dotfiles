@@ -83,56 +83,35 @@ if [ ! -d "$ZINIT_DIR" ]; then
 fi
 
 # ---------------------------------------------------------------------------
-# Helpers: some installers append to ~/.zshrc. After stow, that file is a
-# symlink into the repo — we don't want third-party installers mutating
-# tracked dotfiles. Snapshot before, restore after.
+# 8. Global Node CLIs — installed against the LTS node@24 (keg-only, so its
+#    bin is not on PATH by default; reference it explicitly).
 # ---------------------------------------------------------------------------
-_zshrc_snapshot=""
-preserve_zshrc() {
-	_zshrc_snapshot=$(mktemp)
-	cp -L "$HOME/.zshrc" "$_zshrc_snapshot"
-}
-restore_zshrc() {
-	[ -n "$_zshrc_snapshot" ] || return 0
-	cp "$_zshrc_snapshot" "$DOTFILES/.zshrc"
-	rm -f "$_zshrc_snapshot"
-	_zshrc_snapshot=""
-}
-
-# ---------------------------------------------------------------------------
-# 8. Volta — Node toolchain manager (--skip-setup keeps it out of rc files)
-# ---------------------------------------------------------------------------
-if ! command -v volta >/dev/null 2>&1 && [ ! -x "$HOME/.volta/bin/volta" ]; then
-	log "installing Volta"
-	curl -fsSL https://get.volta.sh | bash -s -- --skip-setup
+NODE_BIN="$(brew --prefix node@24 2>/dev/null)/bin"
+if [ -x "$NODE_BIN/npm" ]; then
+	log "installing global npm CLIs (pi coding agent, corepack)"
+	PATH="$NODE_BIN:$PATH" npm install -g @earendil-works/pi-coding-agent \
+		|| warn "pi-agent global install failed — continuing"
+	PATH="$NODE_BIN:$PATH" corepack enable \
+		|| warn "corepack enable failed — continuing"
 else
-	log "Volta already installed"
+	warn "node@24 not installed — skipping global npm CLIs"
 fi
 
 # ---------------------------------------------------------------------------
-# 9. Bun — JS runtime. Installer writes to ~/.zshrc; preserve/restore.
+# 9. devbox — per-project toolchains via Nix. Global language runtimes come
+#    from Homebrew (node@24, ruby, python@3.13, openjdk@21); devbox covers
+#    anything a project needs pinned. Installer pulls in Nix (may need sudo).
 # ---------------------------------------------------------------------------
-if [ ! -x "$HOME/.bun/bin/bun" ]; then
-	log "installing Bun"
-	preserve_zshrc
-	curl -fsSL https://bun.sh/install | bash || { restore_zshrc; exit 1; }
-	restore_zshrc
+if ! command -v devbox >/dev/null 2>&1; then
+	log "installing devbox (pulls in Nix — may ask for sudo)"
+	curl -fsSL https://get.jetify.com/devbox | bash -s -- -f \
+		|| warn "devbox install failed — continuing"
 else
-	log "Bun already installed"
+	log "devbox already installed"
 fi
 
 # ---------------------------------------------------------------------------
-# 10. RVM — Ruby version manager (--ignore-dotfiles keeps it out of rc files)
-# ---------------------------------------------------------------------------
-if [ ! -d "$HOME/.rvm" ]; then
-	log "installing RVM"
-	curl -sSL https://get.rvm.io | bash -s stable --ignore-dotfiles
-else
-	log "RVM already installed"
-fi
-
-# ---------------------------------------------------------------------------
-# 11. Default shell — Homebrew zsh (newer than /bin/zsh)
+# 10. Default shell — Homebrew zsh (newer than /bin/zsh)
 # ---------------------------------------------------------------------------
 BREW_ZSH="$(brew --prefix)/bin/zsh"
 if [ -x "$BREW_ZSH" ] && [ "${SHELL:-}" != "$BREW_ZSH" ]; then
@@ -145,7 +124,7 @@ if [ -x "$BREW_ZSH" ] && [ "${SHELL:-}" != "$BREW_ZSH" ]; then
 fi
 
 # ---------------------------------------------------------------------------
-# 12. Seed pi settings (COPY, not symlink: pi writes volatile state into it)
+# 11. Seed pi settings (COPY, not symlink: pi writes volatile state into it)
 # ---------------------------------------------------------------------------
 if [ ! -e "$HOME/.pi/agent/settings.json" ]; then
 	cp "$DOTFILES/templates/pi-settings.json" "$HOME/.pi/agent/settings.json"
@@ -153,7 +132,7 @@ if [ ! -e "$HOME/.pi/agent/settings.json" ]; then
 fi
 
 # ---------------------------------------------------------------------------
-# 13. Sanity checks for the pi -> 1Password integration.
+# 12. Sanity checks for the pi -> 1Password integration.
 # ---------------------------------------------------------------------------
 if ! command -v op >/dev/null 2>&1; then
 	warn "1Password CLI 'op' not installed (brew install --cask 1password-cli)"
