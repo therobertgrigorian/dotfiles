@@ -1,4 +1,5 @@
-tap "dlvhdr/formulae"
+# dlvhdr/formulae disabled — see diffnav note below.
+# tap "dlvhdr/formulae"
 tap "hashicorp/tap"
 tap "heroku/brew"
 tap "koekeishiya/formulae"
@@ -53,10 +54,12 @@ brew "yazi"
 brew "zoxide"
 brew "zsh"
 brew "zsh-autosuggestions"
-brew "dlvhdr/formulae/diffnav"
-brew "koekeishiya/formulae/skhd"
+# diffnav formula has a broken SHA-256 (upstream source changed without a
+# hash bump); disabled until dlvhdr/homebrew-formulae fixes it upstream.
+# brew "dlvhdr/formulae/diffnav"
+brew "koekeishiya/formulae/skhd", trusted: true
 cask "1password-cli"
-cask "nikitabobko/tap/aerospace"
+cask "nikitabobko/tap/aerospace", trusted: true
 cask "alt-tab"
 cask "android-platform-tools"
 cask "android-studio"

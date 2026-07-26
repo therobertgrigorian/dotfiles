@@ -25,6 +25,12 @@ fi
 
 # ---------------------------------------------------------------------------
 # 2. Brewfile — formulae, casks, taps, App Store apps
+#    Homebrew 6.0+ requires explicit trust before loading non-official taps
+#    (see `brew help trust`). Rather than shelling out to `brew trust` here,
+#    the third-party entries that need it (koekeishiya/formulae/skhd,
+#    nikitabobko/tap/aerospace) declare `trusted: true` inline in the
+#    Brewfile — `brew bundle install` grants that trust itself before
+#    installing, and it stays in sync with `brew bundle dump`/`cleanup`.
 # ---------------------------------------------------------------------------
 log "brew bundle (Brewfile)"
 # Non-fatal: a single failed formula/cask/extension must not abort the whole
