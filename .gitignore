@@ -22,8 +22,6 @@
 .config/swiftpm/
 
 # Runtime / cache / machine-specific
-.volta/
-.config/nvm/
 .config/.android/
 .config/cursor/chats/
 .config/cursor/statsig-cache.json
@@ -31,6 +29,10 @@
 .config/cagent/
 .config/atuin/atuin-receipt.json
 .atuin/bin/
+
+# yarn global installs — reinstalled on demand, not version-controlled state
+.config/yarn/global/node_modules/
+.config/yarn/global/yarn.lock
 # tmux plugins are installed & managed by TPM (XDG default path), not committed
 .config/tmux/plugins/
 .config/raycast/
