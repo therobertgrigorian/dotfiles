@@ -29,6 +29,7 @@
 .config/cagent/
 .config/atuin/atuin-receipt.json
 .atuin/bin/
+.atuin/logs/
 
 # yarn global installs — reinstalled on demand, not version-controlled state
 .config/yarn/global/node_modules/
