@@ -18,6 +18,10 @@ vim.g.mapleader = " "
 
 require("lazy").setup({
   checker = { enabled = true },
+  -- copilot.lua bundles a ~145MB multi-platform language server. Fetching those
+  -- blobs during checkout takes longer than lazy's default 120s timeout and gets
+  -- SIGTERM'd mid-clone. Keep the (small) partial clone, just give it more time.
+  git = { timeout = 600 },
   spec = {
     { import = "plugins.coding" },
     { import = "plugins.editor" },

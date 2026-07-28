@@ -50,7 +50,6 @@ return {
         end, { "i", "s" }),
       }),
       sources = cmp.config.sources({
-        { name = "codeium" },
         { name = "nvim_lsp" },
         { name = "luasnip" },
       }, {
@@ -61,7 +60,6 @@ return {
         format = lspkind.cmp_format({
           mode = "symbol_text",
           maxwidth = 50,
-          symbol_map = { Codeium = "" },
         }),
       },
     })
