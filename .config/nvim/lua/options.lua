@@ -5,6 +5,13 @@ vim.cmd("set shiftwidth=2")
 
 vim.g.mapleader = " "
 
+-- Make normal/visual-mode motions work on a Russian keyboard layout.
+-- Maps Cyrillic keys back to their Latin equivalents for commands only;
+-- insert mode still types Cyrillic normally.
+vim.opt.langmap =
+  "ФИСВУАПРШОЛДЬТЩЗЙКЫЕГМЦЧНЯ;ABCDEFGHIJKLMNOPQRSTUVWXYZ," ..
+  "фисвуапршолдьтщзйкыегмцчня;abcdefghijklmnopqrstuvwxyz"
+
 vim.opt.nu = true -- enable line numbers
 vim.opt.relativenumber = true -- relative line numbers
 
