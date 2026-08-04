@@ -174,8 +174,21 @@ if [ -f "$HOME/.config/op/pi.env" ]; then
 	fi
 fi
 
+# ---------------------------------------------------------------------------
+# 14. macOS defaults — keyboard key-repeat.
+#    KeyRepeat/InitialKeyRepeat live in NSGlobalDomain (-g). These go BELOW
+#    the System Settings sliders' floor (GUI min: KeyRepeat 2, Initial 15);
+#    1/10 is the practical fastest (KeyRepeat 0 is the absolute floor but can
+#    feel twitchy). Apps read these at launch, so a logout/restart is needed
+#    for the change to take effect everywhere.
+# ---------------------------------------------------------------------------
+log "macOS defaults: fast key repeat"
+defaults write -g KeyRepeat -int 1
+defaults write -g InitialKeyRepeat -int 10
+
 log "done"
 log "next steps:"
 log "  - launch tmux and press 'prefix + I' to install TPM plugins"
 log "  - open nvim once to let lazy.nvim sync plugins"
 log "  - restart your terminal to pick up the new login shell"
+log "  - log out & back in for the fast key-repeat setting to apply"
