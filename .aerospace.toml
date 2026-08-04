@@ -52,8 +52,12 @@ automatically-unhide-macos-hidden-apps = false
 # See: https://nikitabobko.github.io/AeroSpace/guide#on-window-detected-callback
 # Find an app's bundle id with: osascript -e 'id of app "App Name"'
 [[on-window-detected]]
-    if.app-id = 'com.google.Chrome.beta'
+    if.app-id = 'com.google.Chrome'
     run = 'move-node-to-workspace 1'
+
+[[on-window-detected]]
+    if.app-id = 'com.google.Chrome.beta'
+    run = 'move-node-to-workspace B'
 
 [[on-window-detected]]
     if.app-id = 'com.mitchellh.ghostty'
