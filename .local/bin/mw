@@ -1,0 +1,163 @@
+#!/usr/bin/env zsh
+#
+# mw - status of the net2phone production change window.
+#
+# The window is org-defined, not inferred from traffic. Source of truth:
+# "Change Management Process - Net2phone Production" (Confluence N2PNOC/1767211191):
+#
+#   Software releases, configuration changes (small or big), DMLs are limited to
+#   Monday through Friday between 12:01 am ET - 5:30 am Eastern Time.
+#   ALL maintenances MUST be completed by no later than 5:30 am ET. The individual
+#   CM start time must take into account the total maintenance duration, post
+#   release validation and rollback.
+#
+# The wider IDT window is a different, looser thing: Mon-Thu closing at 06:00 ET,
+# announced by the App Support bot in #release-channel with a health-check poll in
+# #prod-support afterwards. N2P is the binding one, so it is what this reports;
+# swap the CLOSE_AT / CLOSE_DAYS values below to track the IDT-wide window instead.
+#
+# Boundaries are anchored to America/New_York wall-clock time, so US daylight
+# saving is handled by the tz database: the local (UTC+4) times shift by an hour
+# twice a year and nothing here needs touching.
+#
+# Usage:
+#   mw           full status
+#   mw --tmux    one styled line for the tmux status bar
+#   mw --line    one plain line, for Today.md or notes
+
+emulate -L zsh
+
+ZONE=America/New_York
+OPEN_AT='00:01'         # ET wall time the window opens
+CLOSE_AT='05:30'        # ET wall time everything must be finished by
+CLOSE_DAYS='1 2 3 4 5'  # weekday of the close, 1=Mon; no weekend window
+
+WARN_SECONDS=3600       # amber below this much remaining
+URGENT_SECONDS=1800     # red below this much remaining
+
+CACHE=${TMPDIR:-/tmp}/mw-window-${UID}
+
+# --- helpers ---------------------------------------------------------------
+
+# Epoch for an HH:MM ET wall time on a given ET calendar date.
+et_epoch() {
+  TZ=$ZONE date -j -f '%Y-%m-%d %H:%M:%S' "$1 $2:00" +%s
+}
+
+# ET calendar date, offset by N days from $now.
+et_date() {
+  if (( $1 == 0 )); then
+    TZ=$ZONE date -r $now +%Y-%m-%d
+  else
+    TZ=$ZONE date -r $now -v$(printf '%+d' $1)d +%Y-%m-%d
+  fi
+}
+
+# ISO weekday (1=Mon .. 7=Sun) of an ET calendar date.
+et_weekday() {
+  TZ=$ZONE date -j -f '%Y-%m-%d' "$1" +%u
+}
+
+# "2h05m", or "3d 20h" once past a day.
+fmt_dur() {
+  local s=$1
+  if (( s >= 86400 )); then
+    printf '%dd %dh' $((s / 86400)) $(((s % 86400) / 3600))
+  else
+    printf '%dh%02dm' $((s / 3600)) $(((s % 3600) / 60))
+  fi
+}
+
+local_hm() { date -r $1 +%H:%M }
+et_hm()    { TZ=$ZONE date -r $1 +%H:%M }
+
+# --- resolve the current or next window ------------------------------------
+
+# MW_NOW overrides the clock (epoch seconds) so the weekend, DST and
+# about-to-close branches can be exercised without waiting for them.
+now=${MW_NOW:-$(date +%s)}
+open=0 close=0
+
+# The result only changes when a window closes, so cache it: at a 1-second tmux
+# status interval this keeps the common case to a single date call.
+if [[ -z ${MW_NOW:-} && -r $CACHE ]]; then
+  read -r c_open c_close < $CACHE
+  if [[ $c_open == <-> && $c_close == <-> ]] && (( now < c_close )); then
+    open=$c_open close=$c_close
+  fi
+fi
+
+if (( close == 0 )); then
+  # Same ET date when the window opens before it closes (00:01 -> 05:30);
+  # the previous evening otherwise (e.g. a 22:00 -> 06:00 profile).
+  local open_offset=0
+  [[ $OPEN_AT > $CLOSE_AT ]] && open_offset=-1
+
+  for n in {0..8}; do
+    d=$(et_date $n)
+    [[ " $CLOSE_DAYS " == *" $(et_weekday $d) "* ]] || continue
+    c=$(et_epoch $d $CLOSE_AT)
+    (( c >= now )) || continue
+    close=$c
+    open=$(et_epoch "$(et_date $((n + open_offset)))" $OPEN_AT)
+    break
+  done
+  (( close > 0 )) && [[ -z ${MW_NOW:-} ]] && print -r -- "$open $close" > $CACHE
+fi
+
+if (( close == 0 )); then
+  # Should be unreachable: some allowed weekday always lies within eight days.
+  print -u2 "mw: could not resolve a change window"
+  exit 1
+fi
+
+if (( now >= open )); then
+  state=open
+  remaining=$((close - now))
+else
+  state=closed
+  remaining=$((open - now))
+fi
+
+# --- output ----------------------------------------------------------------
+
+case ${1:-} in
+--tmux)
+  local green='#a6e3a1' amber='#f9e2af' red='#f38ba8' grey='#6c7086' bg='#1e1e2e'
+  local icon=$''   # nerd-font clock, same family as the other status modules
+  if [[ $state == open ]]; then
+    color=$green
+    (( remaining <= WARN_SECONDS ))   && color=$amber
+    (( remaining <= URGENT_SECONDS )) && color=$red
+    text="MW $(fmt_dur $remaining)"
+  else
+    color=$grey
+    text=MW\ closed
+    (( remaining < 43200 )) && text="MW closed · $(fmt_dur $remaining)"
+  fi
+  # Trailing newline matters: tmux only picks up a complete line from #().
+  print -r -- "#[fg=$color,bg=$bg] $icon $text #[none]"
+  ;;
+
+--line)
+  if [[ $state == open ]]; then
+    print -r -- "Change window: $(local_hm $open)-$(local_hm $close) (N2P, Mon-Fri, all done by 05:30 ET) - $(fmt_dur $remaining) left"
+  else
+    print -r -- "Change window: closed - next $(date -r $open '+%a %H:%M') (opens in $(fmt_dur $remaining))"
+  fi
+  ;;
+
+*)
+  print -r -- "net2phone production change window (Mon-Fri)"
+  if [[ $state == open ]]; then
+    print -r -- "  status   OPEN - $(fmt_dur $remaining) left"
+  else
+    print -r -- "  status   CLOSED - opens in $(fmt_dur $remaining)"
+  fi
+  print -r -- "  window   $(local_hm $open) - $(local_hm $close) local   ($(et_hm $open) - $(et_hm $close) ET)"
+  print -r -- "  opens    $(date -r $open '+%a %d %b %H:%M') local"
+  print -r -- "  closes   $(date -r $close '+%a %d %b %H:%M') local   ($(et_hm $close) ET, everything finished by then - including validation and rollback)"
+  print -r -- "  source   Confluence N2PNOC/1767211191 · approvals in #n2p-cm-review"
+  print -r -- "  note     the wider IDT window is Mon-Thu closing 06:00 ET; its bot warns in #release-channel and polls #prod-support after"
+  ;;
+esac
