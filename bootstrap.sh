@@ -176,15 +176,15 @@ fi
 
 # ---------------------------------------------------------------------------
 # 14. macOS defaults — keyboard key-repeat.
-#    KeyRepeat/InitialKeyRepeat live in NSGlobalDomain (-g). These go BELOW
-#    the System Settings sliders' floor (GUI min: KeyRepeat 2, Initial 15);
-#    1/10 is the practical fastest (KeyRepeat 0 is the absolute floor but can
-#    feel twitchy). Apps read these at launch, so a logout/restart is needed
+#    KeyRepeat/InitialKeyRepeat live in NSGlobalDomain (-g). KeyRepeat 1 is
+#    below the System Settings slider floor (GUI min: 2). InitialKeyRepeat
+#    below 15 causes doubled characters — a slightly long keypress triggers
+#    auto-repeat. Apps read these at launch, so a logout/restart is needed
 #    for the change to take effect everywhere.
 # ---------------------------------------------------------------------------
 log "macOS defaults: fast key repeat"
 defaults write -g KeyRepeat -int 1
-defaults write -g InitialKeyRepeat -int 10
+defaults write -g InitialKeyRepeat -int 15
 
 log "done"
 log "next steps:"
