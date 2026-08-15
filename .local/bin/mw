@@ -123,20 +123,26 @@ fi
 
 case ${1:-} in
 --tmux)
-  local green='#a6e3a1' amber='#f9e2af' red='#f38ba8' grey='#6c7086' bg='#1e1e2e'
-  local icon=$''   # nerd-font clock, same family as the other status modules
-  if [[ $state == open ]]; then
-    color=$green
-    (( remaining <= WARN_SECONDS ))   && color=$amber
-    (( remaining <= URGENT_SECONDS )) && color=$red
-    text="MW $(fmt_dur $remaining)"
-  else
-    color=$grey
-    text=MW\ closed
-    (( remaining < 43200 )) && text="MW closed · $(fmt_dur $remaining)"
+  # Closed window: no chip at all. The empty line still matters - tmux only
+  # replaces the #() segment once it reads a complete line.
+  if [[ $state != open ]]; then
+    print -r -- ''
+    exit 0
   fi
+  local green='#a6e3a1' amber='#f9e2af' red='#f38ba8'
+  local bg='#1e1e2e' crust='#11111b' fg='#cdd6f4' surface0='#313244'
+  local icon=$''  # nerd-font wrench: maintenance
+  local cap_l=$'' cap_r=$''  # rounded half-circles, U+E0B6 left / U+E0B4 right
+  accent=$green
+  (( remaining <= WARN_SECONDS ))   && accent=$amber
+  (( remaining <= URGENT_SECONDS )) && accent=$red
+  text=$(fmt_dur $remaining)
+  # Same pill as the catppuccin status modules (plugins/tmux/utils/status_module.conf):
+  # left cap in the accent, icon crust-on-accent, text on surface0. Right cap is a
+  # plain fg-colored : catppuccin's fg=bg+reverse trick breaks inside #() output,
+  # where tmux drops the reverse attribute and paints the glyph un-swapped.
   # Trailing newline matters: tmux only picks up a complete line from #().
-  print -r -- "#[fg=$color,bg=$bg] $icon $text #[none]"
+  print -r -- "#[fg=$accent]$cap_l#[fg=$crust,bg=$accent]$icon #[fg=$fg,bg=$surface0] $text#[fg=$surface0,bg=$bg]$cap_r#[none]"
   ;;
 
 --line)
