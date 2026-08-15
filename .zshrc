@@ -33,6 +33,7 @@ alias edit=$EDITOR
 
 alias la=tree
 alias cat=bat
+alias md="glow -p"
 
 alias ..="cd .."
 alias ...="cd ../.."
