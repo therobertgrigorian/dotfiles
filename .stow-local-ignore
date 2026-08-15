@@ -1,8 +1,10 @@
 ^\.volta
 ^\.git
 ^\.gitignore
+^\.stowrc
 ^AGENTS\.md
 ^Brewfile
 ^docs
 ^templates
 ^bootstrap\.sh
+^\.remember

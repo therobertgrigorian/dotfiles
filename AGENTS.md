@@ -3,7 +3,8 @@
 ## Repository Overview
 
 Personal dotfiles for macOS (Apple Silicon) managed with **GNU Stow**. All configs
-live at `~/.dotfiles` and are symlinked into `$HOME` via `stow .`. There is no
+live at `~/Workspace/dotfiles` and are symlinked into `$HOME` via `stow .` (the
+target comes from `.stowrc`, so run it from the repo root). There is no
 Makefile, install script, or CI pipeline.
 
 ## Deployment
@@ -26,7 +27,7 @@ stow -R .
 ## Directory Structure
 
 ```
-.dotfiles/
+dotfiles/
   .aerospace.toml          # AeroSpace tiling window manager
   .config/
     atuin/config.toml       # Shell history (Atuin)

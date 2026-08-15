@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# Bootstrap ~/.dotfiles on a fresh macOS (Apple Silicon) laptop.
+# Bootstrap ~/Workspace/dotfiles on a fresh macOS (Apple Silicon) laptop.
 # Idempotent — safe to re-run.
 
 set -euo pipefail
 
-DOTFILES="${DOTFILES:-$HOME/.dotfiles}"
+DOTFILES="${DOTFILES:-$HOME/Workspace/dotfiles}"
 cd "$DOTFILES"
 
 log()  { printf '\033[1;34m[bootstrap]\033[0m %s\n' "$*"; }
