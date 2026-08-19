@@ -4,8 +4,9 @@
 
 Personal dotfiles for macOS (Apple Silicon) managed with **GNU Stow**. All configs
 live at `~/Workspace/dotfiles` and are symlinked into `$HOME` via `stow .` (the
-target comes from `.stowrc`, so run it from the repo root). There is no
-Makefile, install script, or CI pipeline.
+target comes from `.stowrc`, so run it from the repo root). `bootstrap.sh`
+provisions a fresh machine (Homebrew, `Brewfile`, stow, plugin managers,
+macOS defaults) and is idempotent. There is no Makefile or CI pipeline.
 
 ## Deployment
 
@@ -131,6 +132,7 @@ return {
 | JS runtime | Bun                                     |
 | Ruby       | RVM                                     |
 | Git        | gh CLI (HTTPS, nvim editor)             |
+| Containers | colima VM + docker CLI (`colima start`) |
 
 ## Important Notes for Agents
 

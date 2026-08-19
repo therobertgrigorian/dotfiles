@@ -13,8 +13,13 @@ brew "awscli"
 brew "bash"
 brew "bat"
 brew "bun"
+# Containers: colima (Lima-backed Linux VM) + the docker CLI, rather than the
+# docker-desktop cask — no GUI, no licence question, and `colima start` is the
+# only extra step. colima registers its own docker context, so the CLI finds it.
+brew "colima"
 brew "coreutils"
 brew "direnv"
+brew "docker"
 brew "fd"
 brew "ffmpeg"
 brew "fzf"
