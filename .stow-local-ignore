@@ -3,6 +3,7 @@
 ^\.gitignore
 ^\.stowrc
 ^AGENTS\.md
+^README\.md
 ^Brewfile
 ^bootstrap\.sh
 ^\.remember
