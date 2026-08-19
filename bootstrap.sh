@@ -155,10 +155,17 @@ if [ -x "$BREW_ZSH" ] && [ "${SHELL:-}" != "$BREW_ZSH" ]; then
 fi
 
 # ---------------------------------------------------------------------------
-# 12. Seed pi settings (COPY, not symlink: pi writes volatile state into it)
+# 12. Seed pi settings (written, not symlinked: pi writes volatile state into it)
 # ---------------------------------------------------------------------------
 if [ ! -e "$HOME/.pi/agent/settings.json" ]; then
-	cp "$DOTFILES/templates/pi-settings.json" "$HOME/.pi/agent/settings.json"
+	mkdir -p "$HOME/.pi/agent"
+	cat >"$HOME/.pi/agent/settings.json" <<-'PI_SETTINGS'
+		{
+		  "defaultProvider": "anthropic",
+		  "defaultModel": "claude-opus-4-7",
+		  "defaultThinkingLevel": "high"
+		}
+	PI_SETTINGS
 	log "seeded ~/.pi/agent/settings.json"
 fi
 

@@ -26,7 +26,6 @@
 .config/cursor/chats/
 .config/cursor/statsig-cache.json
 # Cursor CLI config - app-managed, carries the signed-in account identity.
-# Shareable defaults live in templates/cursor-cli-config.json.
 .config/cursor/cli-config.json
 .config/configstore/
 .config/cagent/
